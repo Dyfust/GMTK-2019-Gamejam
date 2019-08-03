@@ -56,13 +56,6 @@ public class Actor : MonoBehaviour, IStateMachine
         m_currentGravity = m_defaultGravity;
     }
 
-    protected virtual void Update()
-    {
-        //Orientate();
-        //m_anim.SetFloat("CurrentSpeed", Mathf.Abs(m_velocity.x));
-        //m_anim.SetBool("Grounded", m_body.collisionInfo.bottom);
-    }
-
     #region Platforming physics.
     protected virtual void FixedUpdate()
     {

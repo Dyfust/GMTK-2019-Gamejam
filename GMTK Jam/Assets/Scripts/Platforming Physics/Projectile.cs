@@ -6,6 +6,8 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float m_explosionRadius = 0f;
     private float m_explosionRadiusSqrd { get { return m_explosionRadius * m_explosionRadius; } }
 
+    private bool m_exploded = false;
+
     private Actor m_shooter = null;
     private Rigidbody2D rb = null;
 
@@ -19,7 +21,7 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Surface"))
+        if (other.CompareTag("Surface") && !m_exploded)
         {
             Vector2 thisToActor = m_shooter.transform.position - transform.position;
 
@@ -31,6 +33,7 @@ public class Projectile : MonoBehaviour
                 float force = (1f - actorDistSqrd / m_explosionRadiusSqrd) * m_explosionForce;
 
                 m_shooter.Knockback(direction * force, 0f);
+                m_exploded = true;
             }
 
             Destroy(this.gameObject);

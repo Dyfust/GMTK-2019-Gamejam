@@ -17,7 +17,7 @@ public class Player : Actor
         base.Start();
     }
 
-    protected override void Update()
+    private void Update()
     {
         m_mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
@@ -25,8 +25,6 @@ public class Player : Actor
         {
             Shoot();
         }
-
-        base.Update();
     }
 
     public void Shoot()
