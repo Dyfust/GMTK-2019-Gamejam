@@ -4,6 +4,8 @@ public class Projectile : MonoBehaviour
 {
     [SerializeField] private float m_explosionForce = 0f;
     [SerializeField] private float m_explosionRadius = 0f;
+    [SerializeField] private GameObject m_impactEffect = null;
+    [SerializeField] private ParticleSystem m_particles = null;
     private float m_explosionRadiusSqrd { get { return m_explosionRadius * m_explosionRadius; } }
 
     private bool m_exploded = false;
@@ -36,6 +38,8 @@ public class Projectile : MonoBehaviour
                 m_exploded = true;
             }
 
+            Instantiate(m_impactEffect, transform.position, Quaternion.identity);
+            //Instantiate(m_particles, transform.position, Quaternion.identity);
             Destroy(this.gameObject);
         }
     }

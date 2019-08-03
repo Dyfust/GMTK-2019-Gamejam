@@ -31,7 +31,7 @@ public class Actor : MonoBehaviour, IStateMachine
     // Indicator for which state the actor is in
     private ActorState m_actorState = ActorState.IDLE;
 
-    private Body m_body = null;
+    protected Body m_body = null;
     [SerializeField] private BodyConfig m_bodyConfig = null;
 
     protected StateMachine m_actorSM = null;
@@ -118,7 +118,12 @@ public class Actor : MonoBehaviour, IStateMachine
         // Apply any buffered knockback forces for this frame.
         if (m_bufferedKnockbackForce != Vector2.zero)
         {
-            m_velocity = m_bufferedKnockbackForce;
+            //float dot = Vector2.Dot(m_velocity.normalized, m_bufferedKnockbackForce.normalized);
+
+            //if (m_bufferedKnockbackForce.x != 0)
+            //    m_velocity.x = dot < 0 ? m_bufferedKnockbackForce.x : m_velocity.x + m_bufferedKnockbackForce.x;
+            m_velocity.x += m_bufferedKnockbackForce.x;
+            m_velocity.y = m_bufferedKnockbackForce.y;
             m_bufferedKnockbackForce = Vector2.zero;
 
             m_knockbackDeadzoneTime = Time.fixedTime + m_knockbackDeadzone;
