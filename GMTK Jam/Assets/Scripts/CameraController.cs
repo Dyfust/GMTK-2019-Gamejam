@@ -25,7 +25,7 @@ public class CameraController : MonoBehaviour
         m_currentPosition = transform.position;
 
         m_targetPosition.x = m_currentPosition.x;
-        m_targetPosition.y = m_player.position.y;
+        m_targetPosition.y = (m_player.position.y + m_mousePosition.y) / 2f;
         m_targetPosition.z = -10f;
 
         m_currentPosition = Vector3.SmoothDamp(m_currentPosition, m_targetPosition, ref m_currentVelocity, m_damping);
