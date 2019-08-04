@@ -32,9 +32,9 @@ public class Projectile : MonoBehaviour
 
             if (actorDistSqrd <= m_explosionRadiusSqrd)
             {
-                float force = (1f - actorDistSqrd / m_explosionRadiusSqrd) * m_explosionForce;
+                //float force = (1f - actorDistSqrd / m_explosionRadiusSqrd) * m_explosionForce;
 
-                m_shooter.Knockback(direction * force, 0f);
+                m_shooter.Knockback(direction * m_explosionForce, 0f);
                 m_exploded = true;
             }
 

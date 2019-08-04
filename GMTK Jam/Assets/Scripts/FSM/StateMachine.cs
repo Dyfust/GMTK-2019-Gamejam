@@ -8,6 +8,7 @@ namespace FSM
     {
         private State m_currentState = null;
         private State m_defaultState = null;
+        private List<State> m_states = new List<State>();
         private List<Parameter> m_parameters = new List<Parameter>();
 
         public void UpdateFSM()
@@ -39,6 +40,23 @@ namespace FSM
                     return;
                 }
             }
+        }
+
+        public void AddState(State state)
+        {
+            m_states.Add(state);
+        }
+
+        public State GetState(string name)
+        {
+            for (int index = 0; index < m_states.Count; index++)
+            {
+                if (m_states[index].GetName() == name)
+                { return m_states[index]; }
+            }
+
+            Debug.LogError(string.Format("{0} state could not be found!", name));
+            return null;
         }
 
         public void SetDefaultState(State state)

@@ -9,10 +9,11 @@ namespace FSM.States.ActorS
         private Actor m_actor = null;
         private float m_drag = 0f;
 
-        public AirborneState(Actor actor, float drag)
+        public AirborneState(Actor actor, float drag, string name)
         {
             m_actor = actor;
             m_drag = drag;
+            m_name = name;
         }
 
         public override void OnStateEnter()
@@ -37,10 +38,11 @@ namespace FSM.States.ActorS
         private Actor m_actor = null;
         private float m_friction = 0f;
 
-        public IdleState(Actor actor, float friction)
+        public IdleState(Actor actor, float friction, string name)
         {
             m_actor = actor;
             m_friction = friction;
+            m_name = name;
         }
 
         public override void OnStateEnter()
@@ -65,10 +67,11 @@ namespace FSM.States.ActorS
         private Actor m_actor = null;
         private float m_slideSpeed = 0f;
 
-        public WallSlideState(Actor actor, float slideSpeed)
+        public WallSlideState(Actor actor, float slideSpeed, string name)
         {
             m_actor = actor;
             m_slideSpeed = slideSpeed;
+            m_name = name;
         }
 
         public override void OnStateEnter()
@@ -87,4 +90,47 @@ namespace FSM.States.ActorS
             { m_actor.SetVelocity(m_actor.GetVelocity().x, -m_slideSpeed); }
         }
     }
+
+    //public sealed class DodgeRollState : State
+    //{
+    //    private Player m_player = null;
+    //    private DodgeRollConfig m_config;
+    //    private Parameter m_trigger = null;
+    //    private float m_startTime = 0f;
+
+
+    //    public DodgeRollState(Player player, DodgeRollConfig config, Parameter trigger, string name)
+    //    {
+    //        m_player = player;
+    //        m_config = config;
+    //        m_trigger = trigger;
+    //        m_name = name;
+    //    }
+
+    //    public override void OnStateEnter()
+    //    {
+    //        Vector2 aimDirection = m_player.GetAimDirection();
+    //        int rollDirection = aimDirection.x > 0f ? 1 : -1;
+
+    //        m_player.AnimSetTrigger("Dodge Roll");
+    //        m_player.Knockback(Vector2.right * rollDirection * m_config.force, m_config.deadzoneTime);
+
+    //        m_startTime = Time.time;
+
+    //        Debug.Log("Dodge Roll State Enter!");
+    //    }
+
+    //    public override void OnStateExit()
+    //    {
+
+    //    }
+
+    //    public override void OnStateUpdate()
+    //    {
+    //        if (Time.time >= m_startTime + m_config.deadzoneTime)
+    //        {
+    //            m_trigger.m_value = false;
+    //        }
+    //    }
+    //}
 }

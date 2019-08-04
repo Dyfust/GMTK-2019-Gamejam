@@ -28,23 +28,16 @@ public class Actor : MonoBehaviour, IStateMachine
 
     private Vector2 m_velocity = Vector2.zero;
 
-    // Indicator for which state the actor is in
-    private ActorState m_actorState = ActorState.IDLE;
-
     protected Body m_body = null;
     [SerializeField] private BodyConfig m_bodyConfig = null;
 
     protected StateMachine m_actorSM = null;
 
     private BoxCollider2D m_coll = null;
-    private Animator m_anim = null;
-    private SpriteRenderer m_sr = null;
 
     protected virtual void Awake()
     {
         m_coll = (BoxCollider2D)GetComponent(typeof(BoxCollider2D));
-        m_anim = (Animator)GetComponent(typeof(Animator));
-        m_sr = (SpriteRenderer)GetComponent(typeof(SpriteRenderer));
         m_body = new Body(transform, m_coll, m_bodyConfig);
 
         InitializeStatemachine();
@@ -72,9 +65,12 @@ public class Actor : MonoBehaviour, IStateMachine
         m_actorSM.CreateParameter("Wall Sliding");
 
         // States.
-        State idleState = new FSM.States.ActorS.IdleState(this, m_friction);
-        State airborneState = new FSM.States.ActorS.AirborneState(this, m_drag);
-        State wallSlidingState = new FSM.States.ActorS.WallSlideState(this, m_wallSlideSpeed);
+        State idleState = new FSM.States.ActorS.IdleState(this, m_friction, "Idle");
+        State airborneState = new FSM.States.ActorS.AirborneState(this, m_drag, "Airborne");
+        State wallSlidingState = new FSM.States.ActorS.WallSlideState(this, m_wallSlideSpeed, "Wall Sliding");
+        m_actorSM.AddState(idleState);
+        m_actorSM.AddState(airborneState);
+        m_actorSM.AddState(wallSlidingState);
 
         // Transitions.
         idleState.AddTransition(new Transition(airborneState, m_actorSM.GetParameter("Airborne"), true));
@@ -94,8 +90,6 @@ public class Actor : MonoBehaviour, IStateMachine
         m_actorSM.SetBool("Wall Sliding", m_body.collisionInfo.touchingWall && m_velocity.y < 0f);
         m_actorSM.SetBool("Idle", m_body.collisionInfo.bottom);
         m_actorSM.SetBool("Airborne", m_velocity.y != 0f && !m_body.collisionInfo.bottom && !m_actorSM.GetBool("Wall Sliding"));
-
-        m_actorSM.UpdateFSM();
 
         if (Time.fixedTime >= m_knockbackDeadzoneTime)
         {
@@ -118,11 +112,11 @@ public class Actor : MonoBehaviour, IStateMachine
         // Apply any buffered knockback forces for this frame.
         if (m_bufferedKnockbackForce != Vector2.zero)
         {
-            //float dot = Vector2.Dot(m_velocity.normalized, m_bufferedKnockbackForce.normalized);
+            float dot = Vector2.Dot(m_velocity.normalized, m_bufferedKnockbackForce.normalized);
 
-            //if (m_bufferedKnockbackForce.x != 0)
-            //    m_velocity.x = dot < 0 ? m_bufferedKnockbackForce.x : m_velocity.x + m_bufferedKnockbackForce.x;
-            m_velocity.x += m_bufferedKnockbackForce.x;
+            if (m_bufferedKnockbackForce.x != 0)
+                m_velocity.x = dot < 0 ? m_bufferedKnockbackForce.x : m_velocity.x + m_bufferedKnockbackForce.x;
+
             m_velocity.y = m_bufferedKnockbackForce.y;
             m_bufferedKnockbackForce = Vector2.zero;
 
@@ -137,15 +131,6 @@ public class Actor : MonoBehaviour, IStateMachine
         m_velocity += Vector2.down * m_currentGravity * Time.fixedDeltaTime;
     }
     #endregion
-
-    private void Orientate()
-    {
-        if (m_velocity.x > 0f)
-            m_sr.flipX = false;
-
-        if (m_velocity.x < 0f)
-            m_sr.flipX = true;
-    }
 
     public void Knockback(Vector2 force, float knockbackDeadzone)
     {
@@ -170,11 +155,6 @@ public class Actor : MonoBehaviour, IStateMachine
     public Vector2 GetVelocity()
     { return m_velocity; }
 
-    public ActorState GetActorState()
-    { return m_actorState; }
-
     StateMachine IStateMachine.GetStateMachine()
     { return m_actorSM; }
-
-    public enum ActorState { IDLE, AIRBORNE, WALLSLIDING }
 }
