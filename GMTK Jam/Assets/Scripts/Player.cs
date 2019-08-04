@@ -30,6 +30,8 @@ public class Player : Actor
     private Vector2 m_direction = Vector2.zero;
     private Vector2 m_mousePosition = Vector2.zero;
 
+    private bool m_landingSoundPlayed = true;
+
     private SpriteRenderer m_sr = null;
     private Animator m_anim = null;
 
@@ -62,6 +64,19 @@ public class Player : Actor
         if (Input.GetMouseButtonDown(0))
         {
             Shoot();
+        }
+
+        if (m_body.collisionInfo.bottom)
+        {
+            if (m_landingSoundPlayed == false)
+            {
+                Sound.GetInstance().PlayLandingOneshot();
+                m_landingSoundPlayed = true;
+            }
+        }
+        else
+        {
+            m_landingSoundPlayed = false;
         }
 
         m_anim.SetFloat("AimX", m_direction.x);
@@ -116,6 +131,8 @@ public class Player : Actor
             instantiatedProjectile.Shoot(m_direction * m_shootForce, this);
             m_muzzle.Play("Muzzle_Flash");
             Knockback(-1 * m_direction * m_recoil, m_recoilDeadzone);
+
+            Sound.GetInstance().PlayShootingOneshot();
 
             UpdateClipUI();
         }

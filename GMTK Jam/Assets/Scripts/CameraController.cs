@@ -14,11 +14,17 @@ public class CameraController : MonoBehaviour
     private Vector3 m_currentPosition = Vector2.zero;
     private Vector3 m_currentVelocity = Vector2.zero;
 
-    [SerializeField] private float m_verticalBoundary = 0f;
+    [SerializeField] private Transform m_bg = null;
+    [SerializeField] private float m_bgHeight = 128f / 16f;
+
+    [SerializeField] private float m_cameraLower = 0f;
 
     private void Update()
     {
         m_mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        m_cameraLower = transform.position.y - Camera.main.orthographicSize;
+        m_bg.position = new Vector2(m_bg.position.x, m_cameraLower);
     }
 
     private void FixedUpdate()
@@ -28,15 +34,6 @@ public class CameraController : MonoBehaviour
         m_targetPosition.x = m_currentPosition.x;
         m_targetPosition.y = m_targetTransform.position.y + m_yOffset;
         m_targetPosition.z = -10f;
-
-        //if (Mathf.Abs(m_mousePosition.y - m_targetTransform.position.y) > m_deadzone)
-        //{
-        //    m_targetPosition.y = (m_targetTransform.position.y + m_mousePosition.y) / 2f;
-        //}
-        //else
-        //{
-        //    m_targetPosition.y = m_targetTransform.position.y + m_yOffset;
-        //}
 
         m_currentPosition = Vector3.SmoothDamp(m_currentPosition, m_targetPosition, ref m_currentVelocity, m_damping);
 
