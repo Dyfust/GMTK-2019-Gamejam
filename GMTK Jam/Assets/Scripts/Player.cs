@@ -120,6 +120,14 @@ public class Player : Actor
             UpdateClipUI();
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Fatal"))
+        {
+            gameObject.SetActive(false);
+        }
+    }
 }
 
 [System.Serializable]

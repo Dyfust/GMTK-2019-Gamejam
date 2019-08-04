@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class Platform : MonoBehaviour
 {
-    private static float m_harmlessThreshold = 8f;
+    private static float m_harmlessThresholdH = 7f;
+    private static float m_harmlessThresholdV = 12f;
+
+    [SerializeField] private PlatformType m_type;
+
+    private float m_harmlessThreshold = 0f;
 
     private bool m_playerEntered = false;
     private bool m_isHostile = false;
@@ -14,6 +19,8 @@ public class Platform : MonoBehaviour
     private void Awake()
     {
         m_anim = (Animator)GetComponent(typeof(Animator));
+
+        m_harmlessThreshold = m_type == PlatformType.HORIZONTAL ? m_harmlessThresholdH : m_harmlessThresholdV;
     }
 
     private void Update()
@@ -33,4 +40,6 @@ public class Platform : MonoBehaviour
         if (other.CompareTag("Player"))
         { m_playerEntered = true; }
     }
+
+    public enum PlatformType { HORIZONTAL, VERTICAL }
 }
